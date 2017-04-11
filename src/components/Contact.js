@@ -34,6 +34,8 @@ export default class Contact extends React.Component {
        this.handleCreate = this.handleCreate.bind(this);
        this.handleRemove = this.handleRemove.bind(this);
        this.handleEdit = this.handleEdit.bind(this);
+       this.handleKeyPress = this.handleKeyPress.bind(this);
+
    }
 
    handleChange(e){
@@ -56,6 +58,11 @@ export default class Contact extends React.Component {
    }
 
    handleRemove() {
+
+     if (this.state.selectedKey < 0 ) {
+       return;
+     }
+
      this.setState({
        contactData: update(this.state.contactData,
          { $splice: [[this.state.selectedKey, 1]] }
@@ -75,6 +82,12 @@ export default class Contact extends React.Component {
          }
        )
      });
+   }
+
+   handleKeyPress(e){
+     if(e.charCode == 13) {
+
+     }
    }
 
    render() {
@@ -97,7 +110,12 @@ export default class Contact extends React.Component {
                <h1>Contacts</h1>
                <input name="keyword" placeholder="Search" value={this.state.keyword} onChange={this.handleChange}/>
                <div>{mapToComponents(this.state.contactData)}</div>
-               <ContactDetails isSelected={this.state.selectedKey != -1} contact={this.state.contactData[this.state.selectedKey]}/>
+               <ContactDetails
+                 isSelected={this.state.selectedKey !== -1}
+                 contact={this.state.contactData[this.state.selectedKey]}
+                 onRemove={this.handleRemove}
+                 onEdit={this.handleEdit}
+                 />
                <ContactCreate
                  onCreate = {this.handleCreate}
                  />
